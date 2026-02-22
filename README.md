@@ -15,6 +15,7 @@ This project is a continuation of the work done in [XbfAnalyzer](https://github.
 - **XbfFormat**: .NET library for parsing XBF files and converting them to XAML.
 - **XbfAnalyzer**: WPF application for parsing and analyzing XBF files. It displays a textual representation of the XAML node structure contained in an XBF file.
 - **XbfTest**: Command-line application for validating the XbfFormat library on a directory of XBF files.
+- **XbfGenExtractor**: Utility to extract type information from XbfGen.dll, to be used in the XbfFormat library for parsing XBF files.
 
 ## Prerequisites
 - .NET 10
@@ -41,6 +42,16 @@ At the bottom left and right, the contents of the object and collection stacks a
 
 By default, the application displays the root node section and all other referenced node sections.
 The slider at the top can be used to filter the output to one specific node section.
+
+### XbfGenExtractor
+To extract types from a newer version of XbfGen.dll, add another call to `Extract` in the `Main` method. 
+The necessary offsets and counts have to be determined manually, e.g. by loading the DLL into a debugger and using debug symbols from the Microsoft Symbol Server to locate them.
+
+By default, the tool extracts type information from multiple versions of the DLL and merges the results to obtain a more complete output.
+Alternatively, you may extract information from just the latest version of the DLL but you will find some of the type entries missing
+(probably because those types have only temporarily existed and were later removed from the framework).
+
+The output of the tool can be pasted directly into https://github.com/chausner/XbfTools/blob/master/XbfFormat/XbfFrameworkTypes.cs.
 
 ## See also
 * [PriTools](https://github.com/chausner/PriTools): Tools for parsing and exploring PRI (Package Resource Index) files. Integrates functionality from this project to view XBF files embedded in PRI files.
