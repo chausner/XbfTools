@@ -1,0 +1,47 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+
+    steps:
+    - uses: actions/checkout@v6
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+    - name: Publish
+      if: runner.os == 'Windows'
+      run: dotnet publish --no-build --configuration Release
+    - name: Upload published xbf2xaml
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v7
+      with:
+        name: xbf2xaml
+        path: .\xbf2xaml\bin\Release\net10.0\publish
+    - name: Upload published XbfAnalyzer
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v7
+      with:
+        name: XbfAnalyzer
+        path: .\XbfAnalyzer\bin\Release\net10.0-windows7.0\publish
+    - name: Upload published XbfTest
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v7
+      with:
+        name: XbfTest
+        path: .\XbfTest\bin\Release\net10.0\publish
